@@ -1,15 +1,18 @@
 services:
-  app:
-    build: ./
+
+  app31:
+    build:
+      dockerfile: ./55.Dockerfile
     volumes:
       - ./:/var/www/
     ports:
       - 80:80
       - 443:443
     links:
-      - database
-
-  database:
+      - database10
+    profiles:
+      - donotstart
+  database10:
     image: postgres:10-alpine
     ports:
       - 5432:5432
@@ -18,7 +21,31 @@ services:
       POSTGRES_USER: app
       POSTGRES_PASSWORD: "!ChangeMe!"
     volumes:
-      - data:/var/lib/postgresql/data:rw
+      - data3.1:/var/lib/postgresql/data:rw
+    profiles:
+      - donotstart
+
+  app40:
+    build:
+      dockerfile: ./71.Dockerfile
+    volumes:
+      - ./:/var/www/
+    ports:
+      - 80:80
+      - 443:443
+    links:
+      - database15
+  database15:
+    image: postgres:15-alpine
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: app
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: "!ChangeMe!"
+    volumes:
+      - data4.0:/var/lib/postgresql/data:rw
 
 volumes:
-  data:
+  data3.1:
+  data4.0:
