@@ -33,7 +33,8 @@
         "symfony/swiftmailer-bundle": "^3.5",
         "symfony/yaml": "^4.4",
         "symfony/cache": "^4.4",
-        "sensiolabs/security-checker": "^6.0"
+        "sensiolabs/security-checker": "^6.0",
+        "symfony/apache-pack": "^1.0"
     },
     "scripts": {
         "symfony-scripts": [

@@ -1,11 +1,16 @@
 security:
     encoders:
-        AppBundle\Entity\User: bcrypt
+        # use your user class name here
+        App\Entity\User:
+            # Use native password encoder
+            # This value auto-selects the best possible hashing algorithm
+            # (i.e. Sodium when available).
+            algorithm: auto
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
         doctrine:
             entity:
-                class: AppBundle:User
+                class: App\Entity\User
                 property: username
     firewalls:
         dev:

@@ -3,10 +3,6 @@ FROM php:7.1-apache
 ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 RUN chmod +x /usr/local/bin/install-php-extensions
 
-#ADD https://raw.githubusercontent.com/php/php-src/PHP-5.5/php.ini-development ${PHP_INI_DIR}/php.ini
-#RUN chmod +w ${PHP_INI_DIR}/php.ini
-#RUN sed -ri -e 's|;date.timezone =|date.timezone = Europe/Paris|g' ${PHP_INI_DIR}/php.ini
-
 RUN sed -ri -e 's!/var/www/html!/var/www/public!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -e 's!/var/www/!/var/www/public!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 RUN sed -ri -e 's!ServerTokens OS!ServerTokens Prod!g' /etc/apache2/conf-available/security.conf
