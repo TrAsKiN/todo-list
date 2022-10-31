@@ -44,7 +44,7 @@ class User implements UserInterface
         return $this->id;
     }
 
-    public function getUsername(): string
+    public function getUsername(): ?string
     {
         return $this->username;
     }
@@ -69,7 +69,7 @@ class User implements UserInterface
         $this->password = $password;
     }
 
-    public function getEmail(): string
+    public function getEmail(): ?string
     {
         return $this->email;
     }
