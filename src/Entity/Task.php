@@ -2,64 +2,53 @@
 
 namespace App\Entity;
 
+use App\Repository\TaskRepository;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity
- * @ORM\Table
- */
+#[ORM\Entity(repositoryClass: TaskRepository::class)]
 class Task
 {
-    /**
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    private $createdAt;
+    #[ORM\Column(options: ['default' => 'now'])]
+    private ?DateTime $createdAt;
 
-    /**
-     * @ORM\Column(type="string")
-     * @Assert\NotBlank(message="Vous devez saisir un titre.")
-     */
-    private $title;
+    #[ORM\Column]
+    #[Assert\NotBlank(message: "Vous devez saisir un titre.")]
+    private ?string $title = null;
 
-    /**
-     * @ORM\Column(type="text")
-     * @Assert\NotBlank(message="Vous devez saisir du contenu.")
-     */
-    private $content;
+    #[ORM\Column]
+    #[Assert\NotBlank(message: "Vous devez saisir du contenu.")]
+    private ?string $content = null;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    private $isDone;
+    #[ORM\Column]
+    private bool $isDone = false;
 
     public function __construct()
     {
-        $this->createdAt = new Datetime();
-        $this->isDone = false;
+        $this->createdAt = new DateTime();
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getCreatedAt(): Datetime
+    public function getCreatedAt(): ?DateTime
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(Datetime $createdAt): void
+    public function setCreatedAt(DateTime $createdAt): self
     {
         $this->createdAt = $createdAt;
+
+        return $this;
     }
 
     public function getTitle(): ?string
@@ -67,9 +56,11 @@ class Task
         return $this->title;
     }
 
-    public function setTitle(string $title): void
+    public function setTitle(string $title): self
     {
         $this->title = $title;
+
+        return $this;
     }
 
     public function getContent(): ?string
@@ -77,9 +68,11 @@ class Task
         return $this->content;
     }
 
-    public function setContent(string $content): void
+    public function setContent(string $content): self
     {
         $this->content = $content;
+
+        return $this;
     }
 
     public function isDone(): bool
@@ -87,8 +80,10 @@ class Task
         return $this->isDone;
     }
 
-    public function toggle(bool $flag): void
+    public function toggle(bool $flag): self
     {
         $this->isDone = $flag;
+
+        return $this;
     }
 }
