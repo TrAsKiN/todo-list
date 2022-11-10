@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\Task;
 use App\Form\TaskType;
 use App\Repository\TaskRepository;
+use App\Security\Voter\TaskVoter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,7 +18,7 @@ class TaskController extends AbstractController
     public function list(
         TaskRepository $repository
     ): Response {
-        return $this->render('task/list.html.twig', ['tasks' => $repository->findAll()]);
+        return $this->render('task/list.html.twig', ['tasks' => $repository->findBy(['owner' => $this->getUser()])]);
     }
 
     #[Route('/tasks/create', name: 'task_create', methods: [Request::METHOD_GET, Request::METHOD_POST])]
@@ -42,6 +44,7 @@ class TaskController extends AbstractController
     }
 
     #[Route('/tasks/{id}/edit', name: 'task_edit', methods: [Request::METHOD_GET, Request::METHOD_POST])]
+    #[IsGranted(TaskVoter::MY_TASK, subject: 'task')]
     public function edit(
         Task $task,
         Request $request,
@@ -66,6 +69,7 @@ class TaskController extends AbstractController
     }
 
     #[Route('/tasks/{id}/toggle', name: 'task_toggle', methods: [Request::METHOD_GET])]
+    #[IsGranted(TaskVoter::MY_TASK, subject: 'task')]
     public function toggleTask(
         Task $task,
         TaskRepository $repository
@@ -79,6 +83,7 @@ class TaskController extends AbstractController
     }
 
     #[Route('/tasks/{id}/delete', name: 'task_delete', methods: [Request::METHOD_GET])]
+    #[IsGranted(TaskVoter::MY_TASK, subject: 'task')]
     public function deleteTask(
         Task $task,
         TaskRepository $repository

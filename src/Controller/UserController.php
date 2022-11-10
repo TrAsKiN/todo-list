@@ -5,6 +5,9 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
+use App\Security\Voter\UserVoter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,6 +17,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class UserController extends AbstractController
 {
     #[Route('/users', name: 'user_list', methods: [Request::METHOD_GET])]
+    #[IsGranted('ROLE_ADMIN')]
     public function list(
         UserRepository $repository
     ): Response
@@ -47,6 +51,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/users/{id}/edit', name: 'user_edit', methods: [Request::METHOD_GET, Request::METHOD_POST])]
+    #[Security("is_granted('ROLE_ADMIN') and is_granted('IS_ME', user)")]
     public function edit(
         User $user,
         Request $request,
