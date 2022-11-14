@@ -51,28 +51,28 @@ class UserController extends AbstractController
     }
 
     #[Route('/users/{id}/edit', name: 'user_edit', methods: [Request::METHOD_GET, Request::METHOD_POST])]
-    #[Security("is_granted('ROLE_ADMIN') and is_granted('IS_ME', user)")]
+    #[Security("is_granted('ROLE_ADMIN') and is_granted('IS_ME', userToEdit)")]
     public function edit(
-        User $user,
+        User $userToEdit,
         Request $request,
         UserPasswordHasherInterface $encoder,
         UserRepository $repository
     ): Response {
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->createForm(UserType::class, $userToEdit);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $password = $encoder->hashPassword($user, $user->getPassword());
-            $user->setPassword($password);
+            $password = $encoder->hashPassword($userToEdit, $userToEdit->getPassword());
+            $userToEdit->setPassword($password);
 
-            $repository->save($user, true);
+            $repository->save($userToEdit, true);
 
             $this->addFlash('success', "L'utilisateur a bien été modifié");
 
             return $this->redirectToRoute('user_list');
         }
 
-        return $this->render('user/edit.html.twig', ['form' => $form->createView(), 'user' => $user]);
+        return $this->render('user/edit.html.twig', ['form' => $form->createView(), 'user' => $userToEdit]);
     }
 }
