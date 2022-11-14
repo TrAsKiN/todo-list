@@ -35,7 +35,7 @@ class TaskController extends AbstractController
             $task->setOwner($this->getUser());
             $repository->save($task, true);
 
-            $this->addFlash('success', 'La tâche a été bien été ajoutée.');
+            $this->addFlash('success', "La tâche a été bien été ajoutée.");
 
             return $this->redirectToRoute('task_list');
         }
@@ -57,7 +57,7 @@ class TaskController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $repository->save($task, true);
 
-            $this->addFlash('success', 'La tâche a bien été modifiée.');
+            $this->addFlash('success', "La tâche a bien été modifiée.");
 
             return $this->redirectToRoute('task_list');
         }
@@ -70,27 +70,27 @@ class TaskController extends AbstractController
 
     #[Route('/tasks/{id}/toggle', name: 'task_toggle', methods: [Request::METHOD_GET])]
     #[IsGranted(TaskVoter::MY_TASK, subject: 'task')]
-    public function toggleTask(
+    public function toggle(
         Task $task,
         TaskRepository $repository
     ): Response {
         $task->toggle(!$task->isDone());
         $repository->save($task, true);
 
-        $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
+        $this->addFlash('success', sprintf("La tâche %s a bien été marquée comme faite.", $task->getTitle()));
 
         return $this->redirectToRoute('task_list');
     }
 
     #[Route('/tasks/{id}/delete', name: 'task_delete', methods: [Request::METHOD_GET])]
     #[IsGranted(TaskVoter::MY_TASK, subject: 'task')]
-    public function deleteTask(
+    public function delete(
         Task $task,
         TaskRepository $repository
     ): Response {
         $repository->remove($task, true);
 
-        $this->addFlash('success', 'La tâche a bien été supprimée.');
+        $this->addFlash('success', "La tâche a bien été supprimée.");
 
         return $this->redirectToRoute('task_list');
     }
