@@ -7,6 +7,7 @@ use App\Form\TaskType;
 use App\Repository\TaskRepository;
 use App\Security\Voter\TaskVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,7 +19,14 @@ class TaskController extends AbstractController
     public function list(
         TaskRepository $repository
     ): Response {
-        return $this->render('task/list.html.twig', ['tasks' => $repository->findBy(['owner' => $this->getUser()])]);
+        $anonymousTasks = null;
+        if (in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
+            $anonymousTasks = $repository->findBy(['owner' => [null]], ['title' => 'ASC']);
+        }
+        return $this->render('task/list.html.twig', [
+            'tasks' => $repository->findBy(['owner' => $this->getUser()], ['title' => 'ASC']),
+            'anonymous_tasks' => $anonymousTasks
+        ]);
     }
 
     #[Route('/tasks/create', name: 'task_create', methods: [Request::METHOD_GET, Request::METHOD_POST])]
@@ -83,7 +91,7 @@ class TaskController extends AbstractController
     }
 
     #[Route('/tasks/{id}/delete', name: 'task_delete', methods: [Request::METHOD_GET])]
-    #[IsGranted(TaskVoter::MY_TASK, subject: 'task')]
+    #[Security("is_granted('ROLE_ADMIN') or is_granted('IS_OWNER', task)")]
     public function delete(
         Task $task,
         TaskRepository $repository
