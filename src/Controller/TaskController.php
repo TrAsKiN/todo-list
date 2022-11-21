@@ -5,6 +5,9 @@ namespace App\Controller;
 use App\Entity\Task;
 use App\Form\TaskType;
 use App\Repository\TaskRepository;
+use App\Security\Voter\TaskVoter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,7 +19,14 @@ class TaskController extends AbstractController
     public function list(
         TaskRepository $repository
     ): Response {
-        return $this->render('task/list.html.twig', ['tasks' => $repository->findAll()]);
+        $anonymousTasks = null;
+        if (in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
+            $anonymousTasks = $repository->findBy(['owner' => [null]], ['title' => 'ASC']);
+        }
+        return $this->render('task/list.html.twig', [
+            'tasks' => $repository->findBy(['owner' => $this->getUser()], ['title' => 'ASC']),
+            'anonymous_tasks' => $anonymousTasks
+        ]);
     }
 
     #[Route('/tasks/create', name: 'task_create', methods: [Request::METHOD_GET, Request::METHOD_POST])]
@@ -30,9 +40,10 @@ class TaskController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $task->setOwner($this->getUser());
             $repository->save($task, true);
 
-            $this->addFlash('success', 'La tâche a été bien été ajoutée.');
+            $this->addFlash('success', "La tâche a été bien été ajoutée.");
 
             return $this->redirectToRoute('task_list');
         }
@@ -41,6 +52,7 @@ class TaskController extends AbstractController
     }
 
     #[Route('/tasks/{id}/edit', name: 'task_edit', methods: [Request::METHOD_GET, Request::METHOD_POST])]
+    #[IsGranted(TaskVoter::MY_TASK, subject: 'task')]
     public function edit(
         Task $task,
         Request $request,
@@ -53,7 +65,7 @@ class TaskController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $repository->save($task, true);
 
-            $this->addFlash('success', 'La tâche a bien été modifiée.');
+            $this->addFlash('success', "La tâche a bien été modifiée.");
 
             return $this->redirectToRoute('task_list');
         }
@@ -65,26 +77,28 @@ class TaskController extends AbstractController
     }
 
     #[Route('/tasks/{id}/toggle', name: 'task_toggle', methods: [Request::METHOD_GET])]
-    public function toggleTask(
+    #[IsGranted(TaskVoter::MY_TASK, subject: 'task')]
+    public function toggle(
         Task $task,
         TaskRepository $repository
     ): Response {
         $task->toggle(!$task->isDone());
         $repository->save($task, true);
 
-        $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
+        $this->addFlash('success', sprintf("La tâche %s a bien été marquée comme faite.", $task->getTitle()));
 
         return $this->redirectToRoute('task_list');
     }
 
     #[Route('/tasks/{id}/delete', name: 'task_delete', methods: [Request::METHOD_GET])]
-    public function deleteTask(
+    #[Security("is_granted('ROLE_ADMIN') or is_granted('IS_OWNER', task)")]
+    public function delete(
         Task $task,
         TaskRepository $repository
     ): Response {
         $repository->remove($task, true);
 
-        $this->addFlash('success', 'La tâche a bien été supprimée.');
+        $this->addFlash('success', "La tâche a bien été supprimée.");
 
         return $this->redirectToRoute('task_list');
     }

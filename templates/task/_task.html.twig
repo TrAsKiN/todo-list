@@ -1,0 +1,31 @@
+<div class="col-sm-4 col-lg-4 col-md-4">
+    <div class="thumbnail">
+        <div class="caption">
+            <h4 class="pull-right">
+                {% if task.isDone %}
+                    <span class="glyphicon glyphicon-ok" title="Terminé"></span>
+                {% else %}
+                    <span class="glyphicon glyphicon-remove" title="En cours"></span>
+                {% endif %}
+            </h4>
+            {% if task.owner %}
+                <h4><a href="{{ path('task_edit', {'id' : task.id }) }}">{{ task.title }}</a></h4>
+            {% else %}
+                <h4>{{ task.title }}</h4>
+            {% endif %}
+            <p>{{ task.content }}</p>
+            <p class="text-right">
+                {% if task.owner %}
+                    <a href="{{ path('task_toggle', {'id' : task.id }) }}" class="btn btn-success btn-sm">
+                        {% if not task.isDone %}
+                            Marquer comme faite
+                        {% else %}
+                            Marquer non terminée
+                        {% endif %}
+                    </a>
+                {% endif %}
+                <a href="{{ path('task_delete', {'id' : task.id }) }}" class="btn btn-danger btn-sm">Supprimer</a>
+            </p>
+        </div>
+    </div>
+</div>

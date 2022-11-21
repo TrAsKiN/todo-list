@@ -10,6 +10,7 @@ body {
 
 .slide-image {
     width: 100%;
+    margin-bottom: 1rem;
 }
 
 .carousel-holder {
@@ -47,6 +48,10 @@ body {
 .thumbnail .caption-full {
     padding: 9px;
     color: #333;
+}
+
+.navbar-light {
+    background-color: #e3f2fd;
 }
 
 footer {
