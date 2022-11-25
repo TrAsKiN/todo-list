@@ -27,6 +27,7 @@
         </include>
         <report>
             <text outputFile="coverage.txt" showOnlySummary="true" />
+            <html outputDirectory="coverage"/>
         </report>
     </coverage>
 

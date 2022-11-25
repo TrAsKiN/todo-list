@@ -17,4 +17,5 @@
 .phpunit.result.cache
 ###< phpunit/phpunit ###
 
-coverage.txt
+/coverage.txt
+/coverage/

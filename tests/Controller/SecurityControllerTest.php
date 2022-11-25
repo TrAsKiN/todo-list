@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests;
+namespace App\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -10,14 +10,9 @@ class SecurityControllerTest extends WebTestCase
     public function testLogin(): void
     {
         $client = static::createClient();
-        $client->request('GET', '/login');
-        $client->submitForm('Se connecter', [
-            '_username' => 'test',
-            '_password' => 'test',
-        ]);
-        $this->assertResponseRedirects();
+        SecurityControllerTest::login($client, ['username' => 'test', 'password' => 'test']);
         $client->followRedirect();
-        $this->assertSelectorExists('h1:contains("Bienvenue sur Todo List")');
+        $this->assertRouteSame('homepage');
     }
 
     public static function login(KernelBrowser $client, array $credentials): void
@@ -27,6 +22,5 @@ class SecurityControllerTest extends WebTestCase
             '_username' => $credentials['username'],
             '_password' => $credentials['password'],
         ]);
-        $client->followRedirect();
     }
 }

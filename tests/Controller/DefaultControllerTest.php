@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests;
+namespace App\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -12,6 +12,8 @@ class DefaultControllerTest extends WebTestCase
         $client->request('GET', '/');
 
         $this->assertResponseRedirects();
+        $client->followRedirect();
+        $this->assertRouteSame('login');
     }
 
     public function testHomepageWhenLoggedIn(): void
@@ -21,5 +23,6 @@ class DefaultControllerTest extends WebTestCase
         $client->request('GET', '/');
 
         $this->assertResponseIsSuccessful();
+        $this->assertRouteSame('homepage');
     }
 }
