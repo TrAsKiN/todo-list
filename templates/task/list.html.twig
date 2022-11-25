@@ -20,6 +20,7 @@
             </div>
         {% endfor %}
     </div>
+    {% if is_granted('ROLE_ADMIN') %}
     <h2>Tâches anonyme</h2>
     <div class="row">
         {% for task in anonymous_tasks %}
@@ -28,4 +29,5 @@
             {% endif %}
         {% endfor %}
     </div>
+    {% endif %}
 {% endblock %}
