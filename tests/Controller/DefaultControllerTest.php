@@ -19,7 +19,7 @@ class DefaultControllerTest extends WebTestCase
     public function testHomepageWhenLoggedIn(): void
     {
         $client = static::createClient();
-        SecurityControllerTest::login($client, ['username' => 'test', 'password' => 'test']);
+        SecurityControllerTest::login($client, 'user');
         $client->request('GET', '/');
 
         $this->assertResponseIsSuccessful();
