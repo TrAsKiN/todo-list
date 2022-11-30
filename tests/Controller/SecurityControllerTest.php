@@ -2,6 +2,7 @@
 
 namespace App\Tests\Controller;
 
+use App\Entity\User;
 use App\Repository\UserRepository;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -21,11 +22,13 @@ class SecurityControllerTest extends WebTestCase
         $this->assertRouteSame('homepage');
     }
 
-    public static function login(KernelBrowser $client, string $as): void
+    public static function login(KernelBrowser $client, string $as): ?User
     {
         try {
             $user = static::getContainer()->get(UserRepository::class)->findOneByUsername($as);
             $client->loginUser($user);
+            return $user;
         } catch (Exception $e) {}
+        return null;
     }
 }
