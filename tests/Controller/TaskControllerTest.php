@@ -2,6 +2,8 @@
 
 namespace App\Tests\Controller;
 
+use App\Repository\TaskRepository;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Form;
 
@@ -73,9 +75,10 @@ class TaskControllerTest extends WebTestCase
         ]);
 
         $this->assertResponseRedirects();
-        $client->followRedirect();
+        $crawler = $client->followRedirect();
         $this->assertRouteSame('task_list');
         $this->assertSelectorExists('div.alert.alert-success');
+        $this->assertCount(1, $crawler->filter('.task'));
     }
 
     public function testCreateTaskWithoutTitle(): void
@@ -104,5 +107,78 @@ class TaskControllerTest extends WebTestCase
 
         $this->assertSelectorExists('.has-error #task_content');
         $this->assertSelectorTextContains('.help-block li', 'Vous devez saisir du contenu.');
+    }
+
+    public function testEditTaskWhenNotLoggedIn(): void
+    {
+        $client = static::createClient();
+        $user = static::getContainer()->get(UserRepository::class)->findOneByUsername('user');
+        $task = static::getContainer()->get(TaskRepository::class)->findOneBy(['owner' => $user]);
+        $client->request('GET', '/tasks/'. $task->getId() .'/edit');
+
+        $this->assertResponseRedirects();
+        $client->followRedirect();
+        $this->assertRouteSame('login');
+    }
+
+    public function testEditTaskSuccessfully(): void
+    {
+        $client = static::createClient();
+        $user = SecurityControllerTest::login($client, 'user');
+        $task = static::getContainer()->get(TaskRepository::class)->findOneBy(['owner' => $user]);
+        $client->request('GET', '/tasks/'. $task->getId() .'/edit');
+
+        $this->assertResponseIsSuccessful();
+        $this->assertRouteSame('task_edit');
+        $this->assertRequestAttributeValueSame('id', $task->getId());
+        $this->assertInputValueSame('task[title]', $task->getTitle());
+        $this->assertSelectorTextSame('textarea[name="task[content]"]', $task->getContent());
+
+        $client->submitForm('Modifier', [
+            'task[title]' => 'New title',
+            'task[content]' => 'New content',
+        ]);
+
+        $this->assertResponseRedirects();
+        $crawler = $client->followRedirect();
+        $this->assertResponseIsSuccessful();
+        $this->assertRouteSame('task_list');
+        $this->assertCount(1, $crawler->filter('.task'));
+    }
+
+    public function testEditTaskWhenNotTheOwner(): void
+    {
+        $client = static::createClient();
+        $user = static::getContainer()->get(UserRepository::class)->findOneByUsername('user');
+        SecurityControllerTest::login($client, 'admin');
+        $task = static::getContainer()->get(TaskRepository::class)->findOneBy(['owner' => $user]);
+        $client->request('GET', '/tasks/'. $task->getId() .'/edit');
+
+        $this->assertResponseStatusCodeSame(403);
+    }
+
+    public function testTaskToggleSuccessfully(): void
+    {
+        $client = static::createClient();
+        $user = SecurityControllerTest::login($client, 'user');
+        $task = static::getContainer()->get(TaskRepository::class)->findOneBy(['owner' => $user]);
+        $client->request('GET', '/tasks/'. $task->getId() .'/toggle');
+
+        $this->assertResponseRedirects();
+        $crawler = $client->followRedirect();
+        $this->assertRouteSame('task_list');
+        $this->assertSelectorExists('div.alert.alert-success');
+        $this->assertCount(1, $crawler->filter('.task .glyphicon-ok'));
+    }
+
+    public function testTaskToggleWhenNotTheOwner(): void
+    {
+        $client = static::createClient();
+        $user = static::getContainer()->get(UserRepository::class)->findOneByUsername('user');
+        SecurityControllerTest::login($client, 'admin');
+        $task = static::getContainer()->get(TaskRepository::class)->findOneBy(['owner' => $user]);
+        $client->request('GET', '/tasks/'. $task->getId() .'/toggle');
+
+        $this->assertResponseStatusCodeSame(403);
     }
 }
