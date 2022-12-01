@@ -6,6 +6,7 @@ use App\Repository\TaskRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Form;
+use Symfony\Component\HttpFoundation\Response;
 
 class TaskControllerTest extends WebTestCase
 {
@@ -154,7 +155,7 @@ class TaskControllerTest extends WebTestCase
         $task = static::getContainer()->get(TaskRepository::class)->findOneBy(['owner' => $user]);
         $client->request('GET', '/tasks/'. $task->getId() .'/edit');
 
-        $this->assertResponseStatusCodeSame(403);
+        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
     }
 
     public function testTaskToggleSuccessfully(): void
@@ -179,6 +180,6 @@ class TaskControllerTest extends WebTestCase
         $task = static::getContainer()->get(TaskRepository::class)->findOneBy(['owner' => $user]);
         $client->request('GET', '/tasks/'. $task->getId() .'/toggle');
 
-        $this->assertResponseStatusCodeSame(403);
+        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
     }
 }
