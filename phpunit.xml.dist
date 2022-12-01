@@ -30,6 +30,7 @@
             <file>src/Kernel.php</file>
         </exclude>
         <report>
+            <clover outputFile="clover.xml"/>
             <text outputFile="coverage.txt" showOnlySummary="true" />
             <html outputDirectory="coverage"/>
         </report>
