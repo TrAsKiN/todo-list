@@ -91,7 +91,7 @@ class TaskController extends AbstractController
     }
 
     #[Route('/tasks/{id}/delete', name: 'task_delete', methods: [Request::METHOD_GET])]
-    #[Security("is_granted('ROLE_ADMIN') or is_granted('IS_OWNER', task)")]
+    #[Security("is_granted('". TaskVoter::MY_TASK ."', task) or is_granted('". TaskVoter::ANONYMOUS_TASK ."', task)")]
     public function delete(
         Task $task,
         TaskRepository $repository
