@@ -2,10 +2,12 @@
 
 namespace App\Tests\Controller;
 
+use App\Entity\Task;
 use App\Repository\TaskRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Form;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class TaskControllerTest extends WebTestCase
@@ -13,7 +15,7 @@ class TaskControllerTest extends WebTestCase
     public function testListWhenNotLoggedIn(): void
     {
         $client = static::createClient();
-        $client->request('GET', '/tasks');
+        $client->request(Request::METHOD_GET, '/tasks');
 
         $this->assertResponseRedirects();
         $client->followRedirect();
@@ -24,7 +26,7 @@ class TaskControllerTest extends WebTestCase
     {
         $client = static::createClient();
         SecurityControllerTest::login($client, 'user');
-        $client->request('GET', '/tasks');
+        $client->request(Request::METHOD_GET, '/tasks');
 
         $this->assertResponseIsSuccessful();
         $this->assertRouteSame('task_list');
@@ -35,7 +37,7 @@ class TaskControllerTest extends WebTestCase
     {
         $client = static::createClient();
         SecurityControllerTest::login($client, 'admin');
-        $client->request('GET', '/tasks');
+        $client->request(Request::METHOD_GET, '/tasks');
 
         $this->assertResponseIsSuccessful();
         $this->assertRouteSame('task_list');
@@ -46,7 +48,7 @@ class TaskControllerTest extends WebTestCase
     public function testCreateWhenNotLoggedIn(): void
     {
         $client = static::createClient();
-        $client->request('GET', '/tasks/create');
+        $client->request(Request::METHOD_GET, '/tasks/create');
 
         $this->assertResponseRedirects();
         $client->followRedirect();
@@ -57,7 +59,7 @@ class TaskControllerTest extends WebTestCase
     {
         $client = static::createClient();
         SecurityControllerTest::login($client, 'user');
-        $crawler = $client->request('GET', '/tasks/create');
+        $crawler = $client->request(Request::METHOD_GET, '/tasks/create');
 
         $this->assertResponseIsSuccessful();
         $this->assertRouteSame('task_create');
@@ -68,7 +70,7 @@ class TaskControllerTest extends WebTestCase
     {
         $client = static::createClient();
         SecurityControllerTest::login($client, 'user');
-        $client->request('GET', '/tasks/create');
+        $client->request(Request::METHOD_GET, '/tasks/create');
 
         $client->submitForm('Ajouter', [
             'task[title]' => 'Task title',
@@ -86,7 +88,7 @@ class TaskControllerTest extends WebTestCase
     {
         $client = static::createClient();
         SecurityControllerTest::login($client, 'user');
-        $client->request('GET', '/tasks/create');
+        $client->request(Request::METHOD_GET, '/tasks/create');
 
         $client->submitForm('Ajouter', [
             'task[content]' => 'My task content',
@@ -100,7 +102,7 @@ class TaskControllerTest extends WebTestCase
     {
         $client = static::createClient();
         SecurityControllerTest::login($client, 'user');
-        $client->request('GET', '/tasks/create');
+        $client->request(Request::METHOD_GET, '/tasks/create');
 
         $client->submitForm('Ajouter', [
             'task[title]' => 'Task title',
@@ -115,7 +117,7 @@ class TaskControllerTest extends WebTestCase
         $client = static::createClient();
         $user = static::getContainer()->get(UserRepository::class)->findOneByUsername('user');
         $task = static::getContainer()->get(TaskRepository::class)->findOneBy(['owner' => $user]);
-        $client->request('GET', '/tasks/'. $task->getId() .'/edit');
+        $client->request(Request::METHOD_GET, '/tasks/'. $task->getId() .'/edit');
 
         $this->assertResponseRedirects();
         $client->followRedirect();
@@ -127,7 +129,7 @@ class TaskControllerTest extends WebTestCase
         $client = static::createClient();
         $user = SecurityControllerTest::login($client, 'user');
         $task = static::getContainer()->get(TaskRepository::class)->findOneBy(['owner' => $user]);
-        $client->request('GET', '/tasks/'. $task->getId() .'/edit');
+        $client->request(Request::METHOD_GET, '/tasks/'. $task->getId() .'/edit');
 
         $this->assertResponseIsSuccessful();
         $this->assertRouteSame('task_edit');
@@ -153,7 +155,7 @@ class TaskControllerTest extends WebTestCase
         $user = static::getContainer()->get(UserRepository::class)->findOneByUsername('user');
         SecurityControllerTest::login($client, 'admin');
         $task = static::getContainer()->get(TaskRepository::class)->findOneBy(['owner' => $user]);
-        $client->request('GET', '/tasks/'. $task->getId() .'/edit');
+        $client->request(Request::METHOD_GET, '/tasks/'. $task->getId() .'/edit');
 
         $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
     }
@@ -163,7 +165,7 @@ class TaskControllerTest extends WebTestCase
         $client = static::createClient();
         $user = SecurityControllerTest::login($client, 'user');
         $task = static::getContainer()->get(TaskRepository::class)->findOneBy(['owner' => $user]);
-        $client->request('GET', '/tasks/'. $task->getId() .'/toggle');
+        $client->request(Request::METHOD_GET, '/tasks/'. $task->getId() .'/toggle');
 
         $this->assertResponseRedirects();
         $crawler = $client->followRedirect();
@@ -178,8 +180,33 @@ class TaskControllerTest extends WebTestCase
         $user = static::getContainer()->get(UserRepository::class)->findOneByUsername('user');
         SecurityControllerTest::login($client, 'admin');
         $task = static::getContainer()->get(TaskRepository::class)->findOneBy(['owner' => $user]);
-        $client->request('GET', '/tasks/'. $task->getId() .'/toggle');
+        $client->request(Request::METHOD_GET, '/tasks/'. $task->getId() .'/toggle');
 
         $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+    }
+
+    public function testTaskDeleteWhenNotTheOwner(): void
+    {
+        $client = static::createClient();
+        $user = static::getContainer()->get(UserRepository::class)->findOneByUsername('user');
+        SecurityControllerTest::login($client, 'admin');
+        $task = static::getContainer()->get(TaskRepository::class)->findOneBy(['owner' => $user]);
+        $client->request(Request::METHOD_GET, '/tasks/'. $task->getId() .'/delete');
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+    }
+
+    public function testTaskDeleteSuccessfully(): void
+    {
+        $client = static::createClient();
+        $user = SecurityControllerTest::login($client, 'user');
+        $task = static::getContainer()->get(TaskRepository::class)->findOneBy(['owner' => $user]);
+        $client->request(Request::METHOD_GET, '/tasks/'. $task->getId() .'/delete');
+
+        $this->assertResponseRedirects();
+        $crawler = $client->followRedirect();
+        $this->assertRouteSame('task_list');
+        $this->assertSelectorExists('div.alert.alert-success');
+        $this->assertCount(0, $crawler->filter('.task'));
     }
 }
