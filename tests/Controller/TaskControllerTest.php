@@ -2,7 +2,6 @@
 
 namespace App\Tests\Controller;
 
-use App\Entity\Task;
 use App\Repository\TaskRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -81,7 +80,7 @@ class TaskControllerTest extends WebTestCase
         $crawler = $client->followRedirect();
         $this->assertRouteSame('task_list');
         $this->assertSelectorExists('div.alert.alert-success');
-        $this->assertCount(1, $crawler->filter('.task'));
+        $this->assertCount(1, $crawler->filter('.tasks .task'));
     }
 
     public function testCreateTaskWithoutTitle(): void
@@ -146,7 +145,7 @@ class TaskControllerTest extends WebTestCase
         $crawler = $client->followRedirect();
         $this->assertResponseIsSuccessful();
         $this->assertRouteSame('task_list');
-        $this->assertCount(1, $crawler->filter('.task'));
+        $this->assertCount(1, $crawler->filter('.tasks .task'));
     }
 
     public function testEditTaskWhenNotTheOwner(): void
@@ -171,7 +170,7 @@ class TaskControllerTest extends WebTestCase
         $crawler = $client->followRedirect();
         $this->assertRouteSame('task_list');
         $this->assertSelectorExists('div.alert.alert-success');
-        $this->assertCount(1, $crawler->filter('.task .glyphicon-ok'));
+        $this->assertCount(1, $crawler->filter('.tasks .task .glyphicon-ok'));
     }
 
     public function testTaskToggleWhenNotTheOwner(): void
@@ -207,6 +206,30 @@ class TaskControllerTest extends WebTestCase
         $crawler = $client->followRedirect();
         $this->assertRouteSame('task_list');
         $this->assertSelectorExists('div.alert.alert-success');
-        $this->assertCount(0, $crawler->filter('.task'));
+        $this->assertCount(0, $crawler->filter('.tasks .task'));
+    }
+
+    public function testAnonymousTaskDeleteWhenNotAdmin(): void
+    {
+        $client = static::createClient();
+        SecurityControllerTest::login($client, 'user');
+        $task = static::getContainer()->get(TaskRepository::class)->findOneBy(['owner' => null]);
+        $client->request(Request::METHOD_GET, '/tasks/'. $task->getId() .'/delete');
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+    }
+
+    public function testAnonymousTaskDeleteSuccessfully(): void
+    {
+        $client = static::createClient();
+        SecurityControllerTest::login($client, 'admin');
+        $task = static::getContainer()->get(TaskRepository::class)->findOneBy(['owner' => null]);
+        $client->request(Request::METHOD_GET, '/tasks/'. $task->getId() .'/delete');
+
+        $this->assertResponseRedirects();
+        $crawler = $client->followRedirect();
+        $this->assertRouteSame('task_list');
+        $this->assertSelectorExists('div.alert.alert-success');
+        $this->assertCount(0, $crawler->filter('.anonymous-tasks .task'));
     }
 }

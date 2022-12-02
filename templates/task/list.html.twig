@@ -7,7 +7,7 @@
 {% block body %}
     <a href="{{ path('task_create') }}" class="btn btn-info pull-right">Créer une tâche</a>
     <h2>Mes tâches</h2>
-    <div class="row">
+    <div class="row tasks">
         {% for task in tasks %}
             {% if task.owner == app.user %}
                 {{ include('task/_task.html.twig', {task: task}) }}
@@ -22,7 +22,7 @@
     </div>
     {% if is_granted('ROLE_ADMIN') %}
     <h2>Tâches anonyme</h2>
-    <div class="row">
+    <div class="row anonymous-tasks">
         {% for task in anonymous_tasks %}
             {% if not task.owner %}
                 {{ include('task/_task.html.twig', {task: task}) }}

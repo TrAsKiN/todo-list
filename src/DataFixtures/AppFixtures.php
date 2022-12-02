@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Task;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -30,6 +31,12 @@ class AppFixtures extends Fixture
             ->setPassword($this->passwordHasher->getPasswordHasher(User::class)->hash('admin'))
         ;
         $manager->persist($admin);
+
+        $anonymousTask = (new Task())
+            ->setTitle('Anonymous Task')
+            ->setContent('Content of an anonymous task.')
+        ;
+        $manager->persist($anonymousTask);
 
         $manager->flush();
     }
