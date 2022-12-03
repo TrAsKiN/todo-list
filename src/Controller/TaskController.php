@@ -40,7 +40,7 @@ class TaskController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $task->setOwner($this->getUser());
+            $this->getUser()->addTask($task);
             $repository->save($task, true);
 
             $this->addFlash('success', "La tâche a été bien été ajoutée.");
@@ -91,11 +91,14 @@ class TaskController extends AbstractController
     }
 
     #[Route('/tasks/{id}/delete', name: 'task_delete', methods: [Request::METHOD_GET])]
-    #[Security("is_granted('ROLE_ADMIN') or is_granted('IS_OWNER', task)")]
+    #[Security("is_granted('". TaskVoter::MY_TASK ."', task) or is_granted('". TaskVoter::ANONYMOUS_TASK ."', task)")]
     public function delete(
         Task $task,
         TaskRepository $repository
     ): Response {
+        if ($task->getOwner() !== null) {
+            $this->getUser()->removeTask($task);
+        }
         $repository->remove($task, true);
 
         $this->addFlash('success', "La tâche a bien été supprimée.");
