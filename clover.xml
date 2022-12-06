@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1670336014">
-  <project timestamp="1670336014">
+<coverage generated="1670342926">
+  <project timestamp="1670342926">
     <file name="/home/traskin/todo-list/src/Controller/DefaultController.php">
       <class name="App\Controller\DefaultController" namespace="global">
         <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="1" coveredstatements="1" elements="2" coveredelements="2"/>
@@ -94,8 +94,8 @@
       <class name="App\Entity\Task" namespace="global">
         <metrics complexity="12" methods="12" coveredmethods="12" conditionals="0" coveredconditionals="0" statements="17" coveredstatements="17" elements="29" coveredelements="29"/>
       </class>
-      <line num="35" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="5"/>
-      <line num="37" type="stmt" count="5"/>
+      <line num="35" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="6"/>
+      <line num="37" type="stmt" count="6"/>
       <line num="40" type="method" name="getId" visibility="public" complexity="1" crap="1" count="11"/>
       <line num="42" type="stmt" count="11"/>
       <line num="45" type="method" name="getCreatedAt" visibility="public" complexity="1" crap="1" count="1"/>
@@ -129,8 +129,8 @@
       <class name="App\Entity\User" namespace="global">
         <metrics complexity="18" methods="15" coveredmethods="15" conditionals="0" coveredconditionals="0" statements="27" coveredstatements="27" elements="42" coveredelements="42"/>
       </class>
-      <line num="42" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="2"/>
-      <line num="44" type="stmt" count="2"/>
+      <line num="42" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="3"/>
+      <line num="44" type="stmt" count="3"/>
       <line num="47" type="method" name="getId" visibility="public" complexity="1" crap="1" count="4"/>
       <line num="49" type="stmt" count="4"/>
       <line num="52" type="method" name="getUsername" visibility="public" complexity="1" crap="1" count="4"/>
@@ -210,50 +210,50 @@
     </file>
     <file name="/home/traskin/todo-list/src/Repository/UserRepository.php">
       <class name="App\Repository\UserRepository" namespace="global">
-        <metrics complexity="5" methods="3" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="7" coveredstatements="4" elements="10" coveredelements="6"/>
+        <metrics complexity="5" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="7" coveredstatements="7" elements="10" coveredelements="10"/>
       </class>
-      <line num="19" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="24"/>
-      <line num="21" type="stmt" count="24"/>
+      <line num="19" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="25"/>
+      <line num="21" type="stmt" count="25"/>
       <line num="24" type="method" name="save" visibility="public" complexity="2" crap="2" count="2"/>
       <line num="26" type="stmt" count="2"/>
       <line num="28" type="stmt" count="2"/>
       <line num="29" type="stmt" count="2"/>
-      <line num="33" type="method" name="remove" visibility="public" complexity="2" crap="6" count="0"/>
-      <line num="35" type="stmt" count="0"/>
-      <line num="37" type="stmt" count="0"/>
-      <line num="38" type="stmt" count="0"/>
-      <metrics loc="42" ncloc="34" classes="1" methods="3" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="7" coveredstatements="4" elements="10" coveredelements="6"/>
+      <line num="33" type="method" name="remove" visibility="public" complexity="2" crap="2" count="1"/>
+      <line num="35" type="stmt" count="1"/>
+      <line num="37" type="stmt" count="1"/>
+      <line num="38" type="stmt" count="1"/>
+      <metrics loc="42" ncloc="34" classes="1" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="7" coveredstatements="7" elements="10" coveredelements="10"/>
     </file>
     <file name="/home/traskin/todo-list/src/Security/Voter/TaskVoter.php">
       <class name="App\Security\Voter\TaskVoter" namespace="global">
-        <metrics complexity="5" methods="2" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="7" coveredstatements="6" elements="9" coveredelements="7"/>
+        <metrics complexity="5" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="7" coveredstatements="7" elements="9" coveredelements="9"/>
       </class>
-      <line num="15" type="method" name="supports" visibility="protected" complexity="2" crap="2" count="19"/>
-      <line num="17" type="stmt" count="19"/>
-      <line num="20" type="method" name="voteOnAttribute" visibility="protected" complexity="3" crap="3.04" count="8"/>
-      <line num="22" type="stmt" count="8"/>
-      <line num="23" type="stmt" count="8"/>
-      <line num="24" type="stmt" count="0"/>
+      <line num="15" type="method" name="supports" visibility="protected" complexity="2" crap="2" count="20"/>
+      <line num="17" type="stmt" count="20"/>
+      <line num="20" type="method" name="voteOnAttribute" visibility="protected" complexity="3" crap="3" count="9"/>
+      <line num="22" type="stmt" count="9"/>
+      <line num="23" type="stmt" count="9"/>
+      <line num="24" type="stmt" count="1"/>
       <line num="27" type="stmt" count="8"/>
       <line num="28" type="stmt" count="8"/>
       <line num="29" type="stmt" count="8"/>
-      <metrics loc="33" ncloc="33" classes="1" methods="2" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="7" coveredstatements="6" elements="9" coveredelements="7"/>
+      <metrics loc="33" ncloc="33" classes="1" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="7" coveredstatements="7" elements="9" coveredelements="9"/>
     </file>
     <file name="/home/traskin/todo-list/src/Security/Voter/UserVoter.php">
       <class name="App\Security\Voter\UserVoter" namespace="global">
-        <metrics complexity="6" methods="2" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="7" coveredstatements="6" elements="9" coveredelements="7"/>
+        <metrics complexity="6" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="7" coveredstatements="7" elements="9" coveredelements="9"/>
       </class>
-      <line num="14" type="method" name="supports" visibility="protected" complexity="2" crap="2" count="19"/>
-      <line num="16" type="stmt" count="19"/>
-      <line num="19" type="method" name="voteOnAttribute" visibility="protected" complexity="4" crap="4.07" count="2"/>
-      <line num="21" type="stmt" count="2"/>
-      <line num="22" type="stmt" count="2"/>
-      <line num="23" type="stmt" count="0"/>
+      <line num="14" type="method" name="supports" visibility="protected" complexity="2" crap="2" count="20"/>
+      <line num="16" type="stmt" count="20"/>
+      <line num="19" type="method" name="voteOnAttribute" visibility="protected" complexity="4" crap="4" count="3"/>
+      <line num="21" type="stmt" count="3"/>
+      <line num="22" type="stmt" count="3"/>
+      <line num="23" type="stmt" count="1"/>
       <line num="26" type="stmt" count="2"/>
       <line num="27" type="stmt" count="1"/>
       <line num="30" type="stmt" count="1"/>
-      <metrics loc="33" ncloc="33" classes="1" methods="2" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="7" coveredstatements="6" elements="9" coveredelements="7"/>
+      <metrics loc="33" ncloc="33" classes="1" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="7" coveredstatements="7" elements="9" coveredelements="9"/>
     </file>
-    <metrics files="12" loc="672" ncloc="656" classes="12" methods="49" coveredmethods="46" conditionals="0" coveredconditionals="0" statements="132" coveredstatements="127" elements="181" coveredelements="173"/>
+    <metrics files="12" loc="672" ncloc="656" classes="12" methods="49" coveredmethods="49" conditionals="0" coveredconditionals="0" statements="132" coveredstatements="132" elements="181" coveredelements="181"/>
   </project>
 </coverage>
