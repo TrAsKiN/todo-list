@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\TaskRepository;
-use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -16,14 +15,14 @@ class Task
     private ?int $id = null;
 
     #[ORM\Column(options: ['default' => 'now'])]
-    private ?DateTime $createdAt;
+    private ?\DateTime $createdAt;
 
     #[ORM\Column]
-    #[Assert\NotBlank(message: "Vous devez saisir un titre.")]
+    #[Assert\NotBlank(message: 'Vous devez saisir un titre.')]
     private ?string $title = null;
 
     #[ORM\Column]
-    #[Assert\NotBlank(message: "Vous devez saisir du contenu.")]
+    #[Assert\NotBlank(message: 'Vous devez saisir du contenu.')]
     private ?string $content = null;
 
     #[ORM\Column]
@@ -34,7 +33,7 @@ class Task
 
     public function __construct()
     {
-        $this->createdAt = new DateTime();
+        $this->createdAt = new \DateTime();
     }
 
     public function getId(): ?int
@@ -42,12 +41,12 @@ class Task
         return $this->id;
     }
 
-    public function getCreatedAt(): ?DateTime
+    public function getCreatedAt(): ?\DateTime
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(DateTime $createdAt): self
+    public function setCreatedAt(\DateTime $createdAt): self
     {
         $this->createdAt = $createdAt;
 

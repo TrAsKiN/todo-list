@@ -26,7 +26,7 @@ class TaskVoter extends Voter
 
         return match ($attribute) {
             self::MY_TASK => $subject->getOwner() === $user,
-            self::ANONYMOUS_TASK => $subject->getOwner() === null && in_array('ROLE_ADMIN', $user->getRoles()),
+            self::ANONYMOUS_TASK => null === $subject->getOwner() && in_array('ROLE_ADMIN', $user->getRoles()),
         };
     }
 }

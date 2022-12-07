@@ -17,7 +17,7 @@ class UserVoterTest extends TestCase
             ->method('getUser')
             ->willReturn(null);
 
-        $voter = new UserVoter;
-        $this->assertEquals(VoterInterface::ACCESS_DENIED, $voter->vote($token, new User, [UserVoter::ME]));
+        $voter = new UserVoter();
+        $this->assertEquals(VoterInterface::ACCESS_DENIED, $voter->vote($token, new User(), [UserVoter::ME]));
     }
 }

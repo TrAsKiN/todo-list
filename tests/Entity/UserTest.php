@@ -9,7 +9,7 @@ class UserTest extends TestCase
 {
     public function testUserEntity()
     {
-        $user = new User;
+        $user = new User();
         $user->setUsername('username')
             ->setEmail('user@email.com')
             ->setPassword('password')

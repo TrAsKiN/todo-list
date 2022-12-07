@@ -17,7 +17,7 @@ class TaskVoterTest extends TestCase
             ->method('getUser')
             ->willReturn(null);
 
-        $voter = new TaskVoter;
-        $this->assertEquals(VoterInterface::ACCESS_DENIED, $voter->vote($token, new Task, [TaskVoter::MY_TASK]));
+        $voter = new TaskVoter();
+        $this->assertEquals(VoterInterface::ACCESS_DENIED, $voter->vote($token, new Task(), [TaskVoter::MY_TASK]));
     }
 }

@@ -23,9 +23,10 @@ class TaskController extends AbstractController
         if (in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
             $anonymousTasks = $repository->findBy(['owner' => [null]], ['title' => 'ASC']);
         }
+
         return $this->render('task/list.html.twig', [
             'tasks' => $repository->findBy(['owner' => $this->getUser()], ['title' => 'ASC']),
-            'anonymous_tasks' => $anonymousTasks
+            'anonymous_tasks' => $anonymousTasks,
         ]);
     }
 
@@ -43,7 +44,7 @@ class TaskController extends AbstractController
             $this->getUser()->addTask($task);
             $repository->save($task, true);
 
-            $this->addFlash('success', "La tâche a été bien été ajoutée.");
+            $this->addFlash('success', 'La tâche a été bien été ajoutée.');
 
             return $this->redirectToRoute('task_list');
         }
@@ -65,7 +66,7 @@ class TaskController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $repository->save($task, true);
 
-            $this->addFlash('success', "La tâche a bien été modifiée.");
+            $this->addFlash('success', 'La tâche a bien été modifiée.');
 
             return $this->redirectToRoute('task_list');
         }
@@ -85,23 +86,23 @@ class TaskController extends AbstractController
         $task->toggle(!$task->isDone());
         $repository->save($task, true);
 
-        $this->addFlash('success', sprintf("La tâche %s a bien été marquée comme faite.", $task->getTitle()));
+        $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
 
         return $this->redirectToRoute('task_list');
     }
 
     #[Route('/tasks/{id}/delete', name: 'task_delete', methods: [Request::METHOD_GET])]
-    #[Security("is_granted('". TaskVoter::MY_TASK ."', task) or is_granted('". TaskVoter::ANONYMOUS_TASK ."', task)")]
+    #[Security("is_granted('" . TaskVoter::MY_TASK . "', task) or is_granted('" . TaskVoter::ANONYMOUS_TASK . "', task)")]
     public function delete(
         Task $task,
         TaskRepository $repository
     ): Response {
-        if ($task->getOwner() !== null) {
+        if (null !== $task->getOwner()) {
             $this->getUser()->removeTask($task);
         }
         $repository->remove($task, true);
 
-        $this->addFlash('success', "La tâche a bien été supprimée.");
+        $this->addFlash('success', 'La tâche a bien été supprimée.');
 
         return $this->redirectToRoute('task_list');
     }
