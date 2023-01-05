@@ -1,6 +1,7 @@
 # Contribution Guide
 
-Getting Started
+## Getting Started
+
 Welcome to the project! To get started, you will need to install the project dependencies and set up your local environment.
 
 Instructions for installation and set up can be found in the [README.md](README.md) file at the root of the project. Please follow these instructions carefully to ensure that the project is correctly set up and all dependencies are installed.
