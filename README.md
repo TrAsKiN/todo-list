@@ -16,7 +16,8 @@
 
 ## Launch the local server
 
-Run the command `symfony server:start -d` to start the local server and access the site at the indicated address or type `symfony open:local`.
+1. Run the command `docker compose up -d` to create the database with Docker.
+2. Run the command `symfony server:start -d` to start the local server and access the site at the indicated address or type `symfony open:local`.
 
 ## Default account credentials
 
