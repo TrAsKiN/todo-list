@@ -17,9 +17,6 @@
 .phpunit.result.cache
 ###< phpunit/phpunit ###
 
-/coverage.txt
-/coverage/
-
 ###> friendsofphp/php-cs-fixer ###
 /.php-cs-fixer.php
 /.php-cs-fixer.cache
@@ -29,3 +26,5 @@
 /.phpcs-cache
 /phpcs.xml
 ###< squizlabs/php_codesniffer ###
+
+/coverage.txt
