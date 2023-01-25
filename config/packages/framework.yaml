@@ -17,6 +17,12 @@ framework:
     php_errors:
         log: true
 
+when@prod:
+    framework:
+        session:
+            handler_id: Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler
+            name: 'todo-list-session'
+
 when@test:
     framework:
         test: true

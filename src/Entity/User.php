@@ -26,7 +26,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $username = null;
 
     #[ORM\Column(length: 180, unique: true)]
-    #[Assert\NotBlank(message: "Vous devez saisir une adresse email.")]
+    #[Assert\NotBlank(message: 'Vous devez saisir une adresse email.')]
     #[Assert\Email(message: "Le format de l'adresse n'est pas correcte.")]
     private ?string $email = null;
 

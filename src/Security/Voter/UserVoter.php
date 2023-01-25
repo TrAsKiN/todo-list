@@ -13,7 +13,7 @@ class UserVoter extends Voter
 
     protected function supports(string $attribute, mixed $subject): bool
     {
-        return $attribute == self::ME && $subject instanceof User;
+        return self::ME == $attribute && $subject instanceof User;
     }
 
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
@@ -23,7 +23,7 @@ class UserVoter extends Voter
             return false;
         }
 
-        if ($attribute == self::ME && $subject === $user) {
+        if (self::ME == $attribute && $subject === $user) {
             return true;
         }
 

@@ -4,7 +4,6 @@ namespace App\Tests\Controller;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
-use Exception;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,8 +27,11 @@ class SecurityControllerTest extends WebTestCase
         try {
             $user = static::getContainer()->get(UserRepository::class)->findOneByUsername($as);
             $client->loginUser($user);
+
             return $user;
-        } catch (Exception $e) {}
+        } catch (\Exception $e) {
+        }
+
         return null;
     }
 }

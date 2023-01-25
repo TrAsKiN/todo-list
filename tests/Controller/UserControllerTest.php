@@ -39,7 +39,8 @@ class UserControllerTest extends WebTestCase
         $this->assertRouteSame('user_list');
         $this->assertCount(
             count(static::getContainer()->get(UserRepository::class)->findAll()),
-            $crawler->filter('table tbody tr'));
+            $crawler->filter('table tbody tr')
+        );
     }
 
     public function testUserCreateSuccessfully()
@@ -67,7 +68,7 @@ class UserControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $user = static::getContainer()->get(UserRepository::class)->findOneByUsername('newuser');
-        $client->request(Request::METHOD_GET, '/users/'. $user->getId() .'/edit');
+        $client->request(Request::METHOD_GET, '/users/' . $user->getId() . '/edit');
 
         $this->assertResponseRedirects();
         $client->followRedirect();
@@ -79,7 +80,7 @@ class UserControllerTest extends WebTestCase
         $client = static::createClient();
         SecurityControllerTest::login($client, 'user');
         $user = static::getContainer()->get(UserRepository::class)->findOneByUsername('newuser');
-        $client->request(Request::METHOD_GET, '/users/'. $user->getId() .'/edit');
+        $client->request(Request::METHOD_GET, '/users/' . $user->getId() . '/edit');
 
         $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
     }
@@ -88,7 +89,7 @@ class UserControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $user = SecurityControllerTest::login($client, 'newuser');
-        $client->request(Request::METHOD_GET, '/users/'. $user->getId() .'/edit');
+        $client->request(Request::METHOD_GET, '/users/' . $user->getId() . '/edit');
 
         $this->assertResponseIsSuccessful();
         $this->assertRouteSame('user_edit');
